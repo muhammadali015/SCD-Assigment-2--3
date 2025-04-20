@@ -1,4 +1,19 @@
-fetch('https://jsonplaceholder.typicode.com/todos/1')
-    .then(response => response.json())
-    .then(json => console.log(json))
-    .catch(err => console.error("Fetch error:", err));
+const express = require('express');
+const app = express();
+const PORT = 3000;
+
+app.get('/todo/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const response = await fetch(`https://jsonplaceholder.typicode.com/todos/${id}`);
+        const json = await response.json();
+        res.json(json);
+    } catch (err) {
+        console.error("Fetch error:", err);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
+
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+});
